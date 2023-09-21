@@ -4,6 +4,8 @@ Turning Ingredients into Inspiring Meals
 
 
 ## Packages Used
+- CTkMessagebox
+- customtkinter
 - requests
 
 

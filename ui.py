@@ -4,6 +4,10 @@ app = ctk.CTk()
 app.title("ChefMate")
 app.configure(padx=100, pady=100)
 
+# Set dark/light mode based on system
+ctk.set_appearance_mode("system")
+# Add custom theme
+ctk.set_default_color_theme("./theme.json")
 
 # Create a label above the input frame
 label = ctk.CTkLabel(

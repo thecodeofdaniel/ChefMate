@@ -1,5 +1,5 @@
-# Ignore test files
-*test.py
+# Ignore any test file
+*test*
 
 # Ignore file containing api key
 *api_file.py

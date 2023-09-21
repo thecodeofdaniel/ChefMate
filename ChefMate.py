@@ -1,7 +1,9 @@
 import requests, json
 
 BASE_URL = "https://www.themealdb.com/api/json/v1/1/filter.php?i="
-API_KEY = "1"
+
+API_KEY = open("api_key.py", 'r').read()
+
 INGREDIENT = input("Enter Ingredient: ")
 
 URL = BASE_URL + INGREDIENT

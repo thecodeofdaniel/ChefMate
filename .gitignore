@@ -1,3 +1,8 @@
 # Ignore test files
 *test.py
-*api_key.py
+
+# Ignore file containing api key
+*api_file.py
+
+# Ignore __pycache__
+*__pycache__

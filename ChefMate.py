@@ -24,6 +24,7 @@ selected_meal_name = input("Enter a meal name from the above list: ")
 # Find the idMeal corresponding to the entered meal name
 selected_id_meal = next((id for id, name in meal_dict.items() if name == selected_meal_name), None)
 
+#Error handling if meal is not found
 if not selected_id_meal:
     print("Meal not found!")
 else:

@@ -61,10 +61,13 @@ class ScrollableRecipes(ctk.CTkScrollableFrame):
 
 # Create the UI
 class ChefMate(ctk.CTk):
+    width = 700
+    height = 800
+
     def __init__(self) -> None:
         super().__init__()
         self.title("ChefMate")
-        self.configure(padx=20, pady=20)
+        self.geometry(f"{self.width}x{self.height}")
 
         # Center content
         self.grid_columnconfigure(0, weight=1)

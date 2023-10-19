@@ -1,11 +1,63 @@
 import customtkinter as ctk
+import os
+from PIL import Image
 
+
+# Grab the directory where this file is being run
+CURR_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # Set dark/light mode based on system
 ctk.set_appearance_mode("system")
 
 # Add custom theme
-ctk.set_default_color_theme("./theme.json")
+ctk.set_default_color_theme(f"{CURR_DIR}/theme.json")
+
+class ScrollableRecipes(ctk.CTkScrollableFrame):
+    def __init__(self, master, command=None, **kwargs):
+        super().__init__(master, **kwargs)
+        self.grid_columnconfigure(1, weight=1)
+
+        self.command = command
+        self.label_list = []
+        self.textbox_list = []
+
+    def add_item(self, item, image=None):
+        name = ctk.CTkLabel(
+            self,
+            text=item,
+            image=image,
+            compound="top",
+            font=ctk.CTkFont(size=14, weight="bold"),
+        )
+        textbox = ctk.CTkTextbox(
+            self,
+        )
+
+        name.grid(
+            row=len(self.label_list),
+            column=0,
+            pady=(0,10),
+            padx=10,
+        )
+
+        textbox.grid(
+            row=len(self.textbox_list),
+            column=1,
+            pady=(0,30),
+            sticky="nsew"
+        )
+
+        self.label_list.append(name)
+        self.textbox_list.append(textbox)
+
+    # def remove_item(self, item):
+    #     for label, button in zip(self.label_list, self.button_list):
+    #         if item == label.cget("text"):
+    #             label.destroy()
+    #             button.destroy()
+    #             self.label_list.remove(label)
+    #             self.button_list.remove(button)
+    #             return
 
 # Create the UI
 class ChefMate(ctk.CTk):
@@ -48,12 +100,23 @@ class ChefMate(ctk.CTk):
         self.search_button.grid(row=0, column=1)
 
         # Create scrollable frame containing the recipes
-        self.scroll_frame = ctk.CTkScrollableFrame(
+        self.recipes = ScrollableRecipes(
             self,
-            label_text="Recipes",
             width=800,
+            height=700,
+            corner_radius=0
         )
-        self.scroll_frame.grid(row=2, column=0, pady=20, columnspan=2)
+        self.recipes.grid(row=3, column=0, padx=0, pady=30, sticky="nsew")
+
+        # Add some recipes
+        for i in range(2):
+            self.recipes.add_item(
+                f"Recipe {i}",
+                image=ctk.CTkImage(
+                    Image.open(os.path.join(CURR_DIR, "images", "salmon.jpg")),
+                    size=(300,300)
+                )
+            )
 
     def search_recipes(self):
         ingredients = self.search_box._entry.get()

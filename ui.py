@@ -123,88 +123,24 @@ class ChefMate(ctk.CTk):
             )
 
     def search_recipes(self):
-        ingredients = self.search_box._entry.get()
+        ingredients = str(self.search_box._entry.get())
 
-        # TODO: Create a function to format the input.
-        # For example remove any extra spaces between words between commas.
-        # As well as remove any space before/after the comma
-        #   Ex. chicken   breast  ,     salt -> chicken breast,salt
-        # Then remove any space and replace with underscore.
-        #   Ex. chicken breast,salt -> chicken_breast,salt
-        
-    def format_user_input(user_input):
+        format_input = self.format_user_input(ingredients)
+
+        return format_input
+
+    def format_user_input(self, user_input):
         # Removes any extra spaces between words
         user_input = ' '.join(user_input.split())
-        
+
         # Removes spaces before and after commas
         user_input = user_input.replace(' ,', ',').replace(', ', ',')
-        
+
         # Replace spaces with underscores
         user_input = user_input.replace(' ', '_')
-        
+
         return user_input
 
-
-        # TODO: Once you've formatted the input from the user. Make the API call
-        # with the base url. Output the response to the terminal.
-
-    BASE_URL = f"https://www.themealdb.com/api/json/v2/{api_file.api_key}/filter.php?i="
-
-    # Prompt the user to enter ingredient
-    INGREDIENT = input("Enter Ingredient: ")
-
-    INGREDIENT = format_user_input(INGREDIENT)
-
-    URL = BASE_URL + INGREDIENT
-
-    response = requests.get(URL)
-    response_dictionary = response.json()
-
-    meal_dict = {meal["idMeal"]: meal["strMeal"] for meal in response_dictionary["meals"]}
-
-    print("Meal Options:")
-    for meal in response_dictionary["meals"]:
-        print(f"- {meal['strMeal']} (Preview: {meal['strMealThumb']})")
-    print("\n")
-
-    # Prompt the user to enter a meal name
-    selected_meal_name = input("Enter a meal name from the above list: ")
-
-    # Find the idMeal corresponding to the entered meal name
-    selected_id_meal = None
-
-    for meal_id, meal_name in meal_dict.items():
-        if meal_name == selected_meal_name:
-            selected_id_meal = meal_id
-            # Fetch the recipe
-            RECIPE_URL = f"https://www.themealdb.com/api/json/v2/{api_file.api_key}/lookup.php?i={selected_id_meal}"
-            recipe_response = requests.get(RECIPE_URL)
-            recipe_data = recipe_response.json()
-            meal_details = recipe_data["meals"][0]
-
-            # Display meal details in a more organized format
-            print("\nRecipe for", meal_details["strMeal"])
-            print("Category:", meal_details["strCategory"])
-            print("Region:", meal_details["strArea"])
-            print("\nIngredients:")
-            for i in range(1, 21):
-                ingredient = meal_details[f"strIngredient{i}"]
-                measure = meal_details[f"strMeasure{i}"]
-                if ingredient and ingredient.strip() != "":
-                    print(f"- {ingredient.strip()} ({measure.strip()})")
-
-            print("\nInstructions:")
-            print(meal_details["strInstructions"].strip())
-
-            # If there's a YouTube link, display it
-            if meal_details["strYoutube"]:
-                print("\nWatch the recipe on YouTube:", meal_details["strYoutube"])
-
-                break
-
-    #Error handling if meal is not found
-    else:
-        print("Meal not found!")
 
 chefmate = ChefMate()
 chefmate.mainloop()

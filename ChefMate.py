@@ -1,7 +1,6 @@
 import requests, json
 import api_file
-
-BASE_URL = f"https://www.themealdb.com/api/json/v2/{api_file.api_key}/filter.php?i="
+from config import BASE_URL
 
 # Prompt the user to enter ingredient
 INGREDIENT = input("Enter Ingredient: ")

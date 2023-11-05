@@ -6,6 +6,7 @@ import requests, json
 from config import BASE_URL
 import requests
 from io import BytesIO
+import re
 
 # Grab the directory where this file is being run
 CURR_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -125,6 +126,10 @@ class ChefMate(ctk.CTk):
         # Grab user's input for ingredients entered and format
         ingredients = str(self.search_box._entry.get())   # Get ingredients from searchbox
         ingredients = self.format_user_input(ingredients) # Format input for API call
+        
+        # If ingredients is empty or contains only commas then exit function
+        if ingredients == "" or not self.contains_letters(ingredients):
+            return
 
         # Fetch recipes using GET request
         url = BASE_URL + ingredients
@@ -165,6 +170,10 @@ class ChefMate(ctk.CTk):
         user_input = user_input.replace(' ', '_')
 
         return user_input
+
+
+    def contains_letters(self, input_string: str) -> bool:
+        return bool(re.search(r'[a-zA-Z]', input_string))
 
 
 chefmate = ChefMate()

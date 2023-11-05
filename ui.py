@@ -22,25 +22,25 @@ class ScrollableRecipes(ctk.CTkScrollableFrame):
         self.label_list = []
         self.textbox_list = []
 
-    def add_item(self, item, image=None):
+    def add_item(self, recipe_name, image=None):
+        # Recipe Label
         name = ctk.CTkLabel(
             self,
-            text=item,
+            text=recipe_name,
             image=image,
             compound="top",
             font=ctk.CTkFont(size=14, weight="bold"),
         )
-        textbox = ctk.CTkTextbox(
-            self,
-        )
-
         name.grid(
             row=len(self.label_list),
             column=0,
             pady=(0,10),
-            padx=10,
+            padx=0,
         )
-
+        # Recipe instructions
+        textbox = ctk.CTkTextbox(
+            self,
+        )
         textbox.grid(
             row=len(self.textbox_list),
             column=1,
@@ -48,17 +48,19 @@ class ScrollableRecipes(ctk.CTkScrollableFrame):
             sticky="nsew"
         )
 
+        # Add recipe label to list
         self.label_list.append(name)
+        # Add recipe instructions to list
         self.textbox_list.append(textbox)
 
-    # def remove_item(self, item):
-    #     for label, button in zip(self.label_list, self.button_list):
-    #         if item == label.cget("text"):
-    #             label.destroy()
-    #             button.destroy()
-    #             self.label_list.remove(label)
-    #             self.button_list.remove(button)
-    #             return
+    def remove_recipes(self):
+        for label, textbox in zip(self.label_list, self.textbox_list):
+            print(label.cget("text"))
+            label.destroy()
+            textbox.destroy()
+        self.label_list.clear()
+        self.textbox_list.clear()
+
 
 # Create the UI
 class ChefMate(ctk.CTk):
@@ -108,9 +110,9 @@ class ChefMate(ctk.CTk):
             self,
             width=800,
             height=700,
-            corner_radius=0
+            corner_radius=0,
         )
-        self.recipes.grid(row=3, column=0, padx=0, pady=30, sticky="nsew")
+        self.recipes.grid(column=0, padx=30, pady=20, sticky="nsew")
 
         # Add some recipes
         for i in range(2):
@@ -121,6 +123,8 @@ class ChefMate(ctk.CTk):
                     size=(300,300)
                 )
             )
+
+        # self.recipes.remove_recipes()
 
     def search_recipes(self):
         ingredients = str(self.search_box._entry.get())

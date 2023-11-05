@@ -3,6 +3,8 @@ import os
 from PIL import Image
 import requests, json
 from config import BASE_URL
+import requests
+from io import BytesIO
 
 # Grab the directory where this file is being run
 CURR_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -55,7 +57,6 @@ class ScrollableRecipes(ctk.CTkScrollableFrame):
 
     def remove_recipes(self):
         for label, textbox in zip(self.label_list, self.textbox_list):
-            print(label.cget("text"))
             label.destroy()
             textbox.destroy()
         self.label_list.clear()
@@ -114,24 +115,37 @@ class ChefMate(ctk.CTk):
         )
         self.recipes.grid(column=0, padx=30, pady=20, sticky="nsew")
 
-        # Add some recipes
-        for i in range(2):
-            self.recipes.add_item(
-                f"Recipe {i}",
-                image=ctk.CTkImage(
-                    Image.open(os.path.join(CURR_DIR, "images", "salmon.jpg")),
-                    size=(300,300)
-                )
-            )
-
-        # self.recipes.remove_recipes()
 
     def search_recipes(self):
+        # Remove any previous recipes if found
+        if self.recipes.label_list is not None:
+            self.recipes.remove_recipes()
+
+        # Grab user's input for ingredients entered and format
         ingredients = str(self.search_box._entry.get())   # Get ingredients from searchbox
         ingredients = self.format_user_input(ingredients) # Format input for API call
+
+        # Fetch recipes using GET request
         url = BASE_URL + ingredients
         response = requests.get(url)
-        print(response.json())
+        response = response.json()
+
+        # Ouput the recipes to the GUI
+        if response["meals"] == None:
+            print("No recipes found")
+        else:
+            for meal in response["meals"]:
+                # Format recipe image to output it to GUI
+                image_data = requests.get(meal["strMealThumb"])
+                image_data = BytesIO(image_data.content)
+
+                self.recipes.add_item(
+                meal["strMeal"],
+                image=ctk.CTkImage(
+                    Image.open(image_data),
+                    size=(300, 300)
+                )
+            )
 
 
     def format_user_input(self, user_input):

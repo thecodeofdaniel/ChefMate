@@ -65,7 +65,7 @@ class ScrollableRecipes(ctk.CTkScrollableFrame):
 
 # Create the UI
 class ChefMate(ctk.CTk):
-    width = 700
+    width = 800
     height = 800
 
     def __init__(self) -> None:

@@ -2,7 +2,7 @@ import customtkinter as ctk
 import os
 from PIL import Image
 import requests, json
-import api_file
+from config import BASE_URL
 
 # Grab the directory where this file is being run
 CURR_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -127,11 +127,12 @@ class ChefMate(ctk.CTk):
         # self.recipes.remove_recipes()
 
     def search_recipes(self):
-        ingredients = str(self.search_box._entry.get())
+        ingredients = str(self.search_box._entry.get())   # Get ingredients from searchbox
+        ingredients = self.format_user_input(ingredients) # Format input for API call
+        url = BASE_URL + ingredients
+        response = requests.get(url)
+        print(response.json())
 
-        format_input = self.format_user_input(ingredients)
-
-        return format_input
 
     def format_user_input(self, user_input):
         # Removes any extra spaces between words

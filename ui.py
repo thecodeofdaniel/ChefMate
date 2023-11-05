@@ -1,4 +1,5 @@
 import customtkinter as ctk
+import CTkMessagebox as ctkMb
 import os
 from PIL import Image
 import requests, json
@@ -132,7 +133,12 @@ class ChefMate(ctk.CTk):
 
         # Ouput the recipes to the GUI
         if response["meals"] == None:
-            print("No recipes found")
+            ctkMb.CTkMessagebox(
+            master=self,
+            title="Error",
+            message=f"No recipes with ingredients \"{ingredients}\" were found",
+            icon="cancel"
+         )
         else:
             for meal in response["meals"]:
                 # Format recipe image to output it to GUI

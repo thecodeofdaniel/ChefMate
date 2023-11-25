@@ -7,6 +7,7 @@ from config import BASE_URL
 import requests
 from io import BytesIO
 import re
+from fetch_recipe import get_recipe_details
 
 # Grab the directory where this file is being run
 CURR_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -26,7 +27,7 @@ class ScrollableRecipes(ctk.CTkScrollableFrame):
         self.label_list = []
         self.textbox_list = []
 
-    def add_item(self, recipe_name, image=None):
+    def add_item(self, recipe_name: str, recipe_id: str, image=None):
         # Recipe Label
         name = ctk.CTkLabel(
             self,
@@ -51,6 +52,17 @@ class ScrollableRecipes(ctk.CTkScrollableFrame):
             pady=(0,30),
             sticky="nsew"
         )
+
+        # Grab the instructions and ingredients of the recipe
+        instructions, ingredients = get_recipe_details(recipe_id)
+
+        # Insert the ingredients to textbox
+        for ingredient in ingredients:
+            textbox.insert('insert', f"{ingredient}\n")
+
+        # Insert the instructions to textbox
+        textbox.insert('insert', f"\n\n{instructions}")
+
 
         # Add recipe label to list
         self.label_list.append(name)
@@ -126,7 +138,7 @@ class ChefMate(ctk.CTk):
         # Grab user's input for ingredients entered and format
         ingredients = str(self.search_box._entry.get())   # Get ingredients from searchbox
         ingredients = self.format_user_input(ingredients) # Format input for API call
-        
+
         # If ingredients is empty or contains only commas then exit function
         if ingredients == "" or not self.contains_letters(ingredients):
             return
@@ -152,6 +164,7 @@ class ChefMate(ctk.CTk):
 
                 self.recipes.add_item(
                 meal["strMeal"],
+                meal["idMeal"],
                 image=ctk.CTkImage(
                     Image.open(image_data),
                     size=(300, 300)

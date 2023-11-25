@@ -24,32 +24,45 @@ class ScrollableRecipes(ctk.CTkScrollableFrame):
         self.grid_columnconfigure(1, weight=1)
 
         self.command = command
-        self.label_list = []
-        self.textbox_list = []
+        self.names_of_recipes = []
+        self.images_of_recipes = []
+        self.content_of_recipes = []
+        self.recipe_count = 0
 
     def add_item(self, recipe_name: str, recipe_id: str, image=None):
-        # Recipe Label
-        name = ctk.CTkLabel(
+        # Recipe name
+        recipe_name = ctk.CTkLabel(
             self,
             text=recipe_name,
+            font=ctk.CTkFont(size=18, weight="bold"),
+        )
+        recipe_name.grid(
+            row=self.recipe_count,
+            column=0,
+            columnspan=2,
+            pady=(10, 5) # 10 padding on top / 5 padding on bottom
+        )
+        # Recipe image
+        recipe_image = ctk.CTkLabel(
+            self,
+            text="",
             image=image,
             compound="top",
             font=ctk.CTkFont(size=14, weight="bold"),
         )
-        name.grid(
-            row=len(self.label_list),
+        recipe_image.grid(
+            row=self.recipe_count + 1,
             column=0,
-            pady=(0,10),
-            padx=0,
+            pady=(0,20),
         )
-        # Recipe instructions
-        textbox = ctk.CTkTextbox(
+        # Recipe ingredients/instructions
+        recipe_content = ctk.CTkTextbox(
             self,
         )
-        textbox.grid(
-            row=len(self.textbox_list),
+        recipe_content.grid(
+            row=self.recipe_count + 1,
             column=1,
-            pady=(0,30),
+            pady=(0,20),
             sticky="nsew"
         )
 
@@ -58,23 +71,27 @@ class ScrollableRecipes(ctk.CTkScrollableFrame):
 
         # Insert the ingredients to textbox
         for ingredient in ingredients:
-            textbox.insert('insert', f"{ingredient}\n")
-
+            recipe_content.insert('insert', f"{ingredient}\n")
         # Insert the instructions to textbox
-        textbox.insert('insert', f"\n\n{instructions}")
+        recipe_content.insert('insert', f"\n\n{instructions}")
 
+        # Append content to lists
+        self.names_of_recipes.append(recipe_name)
+        self.images_of_recipes.append(recipe_image)
+        self.content_of_recipes.append(recipe_content)
 
-        # Add recipe label to list
-        self.label_list.append(name)
-        # Add recipe instructions to list
-        self.textbox_list.append(textbox)
+        # Increment counter
+        self.recipe_count += 2
 
     def remove_recipes(self):
-        for label, textbox in zip(self.label_list, self.textbox_list):
+        for label, image, textbox in zip(self.names_of_recipes, self.images_of_recipes, self.content_of_recipes):
             label.destroy()
+            image.destroy()
             textbox.destroy()
-        self.label_list.clear()
-        self.textbox_list.clear()
+        self.names_of_recipes.clear()
+        self.images_of_recipes.clear()
+        self.content_of_recipes.clear()
+        self.recipe_count = 0
 
 
 # Create the UI
@@ -132,7 +149,7 @@ class ChefMate(ctk.CTk):
 
     def search_recipes(self):
         # Remove any previous recipes if found
-        if self.recipes.label_list is not None:
+        if self.recipes.images_of_recipes is not None:
             self.recipes.remove_recipes()
 
         # Grab user's input for ingredients entered and format

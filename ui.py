@@ -22,8 +22,6 @@ class ScrollableRecipes(ctk.CTkScrollableFrame):
     def __init__(self, master, command=None, **kwargs):
         super().__init__(master, **kwargs)
         self.grid_columnconfigure(1, weight=1)
-
-        self.command = command
         self.names_of_recipes = []
         self.images_of_recipes = []
         self.content_of_recipes = []
@@ -67,13 +65,15 @@ class ScrollableRecipes(ctk.CTkScrollableFrame):
         )
 
         # Grab the instructions and ingredients of the recipe
-        instructions, ingredients = get_recipe_details(recipe_id)
+        instructions, ingredients, link = get_recipe_details(recipe_id)
 
         # Insert the ingredients to textbox
         for ingredient in ingredients:
-            recipe_content.insert('insert', f"{ingredient}\n")
+            recipe_content.insert('insert', f"• {ingredient}\n")
         # Insert the instructions to textbox
-        recipe_content.insert('insert', f"\n\n{instructions}")
+        recipe_content.insert('insert', f"\n{instructions}")
+        recipe_content.insert('insert', f"\n\n{link}")
+        recipe_content.configure(state="disabled")
 
         # Append content to lists
         self.names_of_recipes.append(recipe_name)

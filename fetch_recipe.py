@@ -1,7 +1,7 @@
 from config import MEAL_URL
 import requests
 
-def get_recipe_details(idMeal: str) -> (str, list[str]):
+def get_recipe_details(idMeal: str) -> (str, list[str], str):
     # url to get recipe instructions and ingredients
     url = MEAL_URL + idMeal
 
@@ -19,13 +19,14 @@ def get_recipe_details(idMeal: str) -> (str, list[str]):
         ingredient_key = f'strIngredient{i}'
         measure_key = f'strMeasure{i}'
 
-        ingredient = response['meals'][0][ingredient_key].strip()
-        measure = response['meals'][0][measure_key].strip()
+        ingredient = response['meals'][0][ingredient_key]
+        measure = response['meals'][0][measure_key]
 
         # If the ingredient is empty, we reached the end of the ingredients
         if ingredient == "":
             break
-
         ingredients.append(f"{measure} {ingredient}")
 
-    return instructions, ingredients
+    youtube_link = response["meals"][0]["strYoutube"]
+
+    return instructions, ingredients, youtube_link

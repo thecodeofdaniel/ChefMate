@@ -207,7 +207,3 @@ class ChefMate(ctk.CTk):
 
     def contains_letters(self, input_string: str) -> bool:
         return bool(re.search(r'[a-zA-Z]', input_string))
-
-
-if __name__ == "__main__":
-    print("Please run main.py")

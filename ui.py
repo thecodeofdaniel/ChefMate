@@ -206,5 +206,5 @@ class ChefMate(ctk.CTk):
         return bool(re.search(r'[a-zA-Z]', input_string))
 
 
-chefmate = ChefMate()
-chefmate.mainloop()
+if __name__ == "__main__":
+    print("Please run main.py")

@@ -25,8 +25,10 @@ def get_recipe_details(idMeal: str) -> (str, list[str], str):
         # If the ingredient is empty, we reached the end of the ingredients
         if ingredient == "":
             break
+        # otherwise add ingredients to list
         ingredients.append(f"{measure} {ingredient}")
 
+    # Grab youtube link for recipe
     youtube_link = response["meals"][0]["strYoutube"]
 
     return instructions, ingredients, youtube_link

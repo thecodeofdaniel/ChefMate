@@ -1,5 +1,9 @@
+# Python library
+import requests # To use API
+
+# Local files
 from config import MEAL_URL
-import requests
+
 
 def get_recipe_details(idMeal: str) -> (str, list[str], str):
     # url to get recipe instructions and ingredients

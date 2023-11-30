@@ -1,16 +1,19 @@
-import customtkinter as ctk
-import CTkMessagebox as ctkMb
-import os
-from PIL import Image
-import requests, json
+# Python libraries
+import customtkinter as ctk   # Create UI
+import CTkMessagebox as ctkMb # Display pop up messages
+from   io import BytesIO      # Display images without creating local file
+from   os import path         # Grab full path of file
+from   PIL import Image       # Work with images with customtkinter
+import re                     # Work with regular expressions
+import requests               # To use API
+
+# Local files
 from config import BASE_URL
-import requests
-from io import BytesIO
-import re
 from fetch_recipe import get_recipe_details
 
+
 # Grab the directory where this file is being run
-CURR_DIR = os.path.dirname(os.path.abspath(__file__))
+CURR_DIR = path.dirname(path.abspath(__file__))
 
 # Set dark/light mode based on system
 ctk.set_appearance_mode("system")

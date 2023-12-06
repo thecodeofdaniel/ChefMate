@@ -15,6 +15,9 @@ from fetch_recipe import get_recipe_details
 # Grab the directory where this file is being run
 CURR_DIR = path.dirname(path.abspath(__file__))
 
+# Max number of recipes
+MAX_NUM_RECIPES = 20
+
 # Set dark/light mode based on system
 ctk.set_appearance_mode("system")
 
@@ -106,6 +109,7 @@ class ChefMate(ctk.CTk):
         super().__init__()
         self.title("ChefMate")
         self.geometry(f"{self.width}x{self.height}")
+        self.prev_ingredients = ""
 
         # Center content
         self.grid_columnconfigure(0, weight=1)
@@ -151,13 +155,20 @@ class ChefMate(ctk.CTk):
 
 
     def search_recipes(self):
+        # Grab and format input from search box (ingredients)
+        searchbox_input = str(self.search_box._entry.get())
+        searchbox_input = self.format_user_input(searchbox_input)
+        ingredients = searchbox_input
+
+        # If the input is the same as before exit this function
+        if searchbox_input == self.prev_ingredients:
+            return
+        else:
+            self.prev_ingredients = ingredients
+
         # Remove any previous recipes if found
         if self.recipes.images_of_recipes is not None:
             self.recipes.remove_recipes()
-
-        # Grab user's input for ingredients entered and format
-        ingredients = str(self.search_box._entry.get())   # Get ingredients from searchbox
-        ingredients = self.format_user_input(ingredients) # Format input for API call
 
         # If ingredients is empty or contains only commas then exit function
         if ingredients == "" or not self.contains_letters(ingredients):
@@ -177,6 +188,7 @@ class ChefMate(ctk.CTk):
             icon="cancel"
          )
         else:
+            count = 1
             for meal in response["meals"]:
                 # Format recipe image to output it to GUI
                 image_data = requests.get(meal["strMealThumb"])
@@ -188,8 +200,11 @@ class ChefMate(ctk.CTk):
                 image=ctk.CTkImage(
                     Image.open(image_data),
                     size=(300, 300)
-                )
-            )
+                ))
+
+                if count >= MAX_NUM_RECIPES:
+                    break
+                count += 1
 
 
     def format_user_input(self, user_input):
